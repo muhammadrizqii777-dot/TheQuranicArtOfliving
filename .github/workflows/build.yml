@@ -10,18 +10,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4   # checkout terbaru
+      - uses: actions/checkout@v4
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'   # atau versi yang lo pake
+          channel: stable
 
-      - run: flutter pub get
-      - run: flutter build apk --release
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Build AAB
+        run: flutter build appbundle --release
 
       - name: Upload APK
-        uses: actions/upload-artifact@v4   # ⬅️ ini diganti v4
+        uses: actions/upload-artifact@v4
         with:
-          name: release-apk
+          name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: build/app/outputs/bundle/release/app-release.aab
